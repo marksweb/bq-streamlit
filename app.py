@@ -44,10 +44,10 @@ def run_query(query: str):
     return rows
 
 
-st.set_page_config(page_title="FPL BigQuery Assistant", page_icon=" ")
-st.title("FPL BigQuery Assistant")
+st.set_page_config(page_title="BigQuery Assistant", page_icon=" ")
+st.title("BigQuery Assistant")
 st.write(
-    "Ask a question about FPL data. The assistant will generate BigQuery SQL and run it for the selected Gameweek."
+    "Ask a question about your data. The assistant will generate BigQuery SQL and run it for the selected Gameweek."
 )
 
 gw = st.number_input("Gameweek", min_value=1, max_value=38, value=12, step=1)
