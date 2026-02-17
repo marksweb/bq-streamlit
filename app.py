@@ -50,7 +50,7 @@ st.write(
     "Ask a question about your data. The assistant will generate BigQuery SQL and run it for the selected Gameweek."
 )
 
-gw = st.number_input("Gameweek", min_value=1, max_value=38, value=12, step=1)
+gw = st.number_input("Gameweek", min_value=1, max_value=38, value=26, step=1)
 
 query = st.text_input(
     "What would you like to find?",
