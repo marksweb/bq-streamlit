@@ -9,6 +9,9 @@ from models import SqlQuery
 
 load_dotenv()
 
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "plfpl-production")
+BQ_DATASET_PREFIX = os.getenv("BQ_DATASET_PREFIX", "ism_GW")
+
 model = OpenAIChatModel(
     "gpt-4.1", provider=OpenAIProvider(api_key=os.getenv("OPENAI_API_KEY"))
 )
@@ -22,7 +25,7 @@ Use ONLY the following schema when choosing tables/columns. If the user asks for
 \nSCHEMA CONTEXT\n{schema_text}\nEND SCHEMA CONTEXT\n
 Rules:
 - SELECT statements only; no DDL/DML or scripting.
-- Use Standard SQL and fully-qualified tables: `plfpl-production.ism_GW{gameweek}.<table>`.
+- Use Standard SQL and fully-qualified tables: `{GCP_PROJECT_ID}.{BQ_DATASET_PREFIX}{gameweek}.<table>`.
 - Prefer explicit column lists and safe aggregations; avoid SELECT * unless needed.
 - Include sensible LIMITs for non-aggregate queries (e.g., LIMIT 100).
 """

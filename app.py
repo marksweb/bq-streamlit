@@ -1,11 +1,19 @@
 import asyncio
+import os
 
 import streamlit as st
+from dotenv import load_dotenv
 from google.oauth2 import service_account
 from google.cloud import bigquery
 
 from agent import run_agent
 from bq import manifest_to_prompt, dry_run_sql
+
+load_dotenv()
+
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "plfpl-production")
+BQ_DATASET_PREFIX = os.getenv("BQ_DATASET_PREFIX", "ism_GW")
+
 
 # Create API client.
 credentials = service_account.Credentials.from_service_account_info(
@@ -16,7 +24,7 @@ client = bigquery.Client(credentials=credentials)
 
 @st.cache_data(ttl=600)
 def get_schema_manifest(_client: bigquery.Client, gameweek: int) -> dict:
-    dataset = f"plfpl-production.ism_GW{gameweek}"
+    dataset = f"{GCP_PROJECT_ID}.{BQ_DATASET_PREFIX}{gameweek}"
     sql = f"""
     SELECT table_name, column_name, data_type
     FROM `{dataset}.INFORMATION_SCHEMA.COLUMNS`
@@ -27,8 +35,8 @@ def get_schema_manifest(_client: bigquery.Client, gameweek: int) -> dict:
     for r in rows:
         manifest.setdefault(r["table_name"], []).append(r["column_name"])
     return {
-        "project": "plfpl-production",
-        "dataset": f"ism_GW{gameweek}",
+        "project": GCP_PROJECT_ID,
+        "dataset": f"{BQ_DATASET_PREFIX}{gameweek}",
         "tables": manifest,
     }
 
