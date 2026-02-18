@@ -97,6 +97,7 @@ if st.button("Run Query"):
             results_rows = run_query(sql)
         except Exception as e:
             error_msg = str(e)
+            st.error(error_msg)
 if correction_made:
     st.warning(
         "⚠️ Initial SQL required correction after validation error. "
