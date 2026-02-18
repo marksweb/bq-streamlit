@@ -14,6 +14,8 @@ load_dotenv()
 GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID", "plfpl-production")
 BQ_DATASET_PREFIX = os.getenv("BQ_DATASET_PREFIX", "ism_GW")
 
+correction_made = False
+
 
 # Create API client.
 credentials = service_account.Credentials.from_service_account_info(
@@ -90,9 +92,16 @@ if st.button("Run Query"):
                 if not ok2:
                     raise RuntimeError(err2 or err)
 
+            correction_made = True
+
             results_rows = run_query(sql)
         except Exception as e:
             error_msg = str(e)
+if correction_made:
+    st.warning(
+        "⚠️ Initial SQL required correction after validation error. "
+        "The corrected version was executed successfully."
+    )
 if sql:
     with st.expander("Show generated SQL"):
         st.code(sql, language="sql")
